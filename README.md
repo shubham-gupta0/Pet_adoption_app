@@ -28,7 +28,17 @@ A beautiful and modern Flutter application that helps users find and adopt their
 
 > Add your app screenshots here
 
-## 🚀 Getting Started
+## � Download APK
+
+You can download the latest Android APK directly from this repository:
+
+- **[Download Pet Adoption App APK](./app-release.apk)** 📱
+
+Simply download the APK file and install it on your Android device to start using the app right away!
+
+> **Note**: Make sure to enable "Install from unknown sources" in your Android settings if prompted.
+
+## �🚀 Getting Started
 
 ### Prerequisites
 
@@ -112,29 +122,39 @@ lib/
 
 ## 🔧 Build & Deploy
 
-### Android APK
+### Quick Download
+
+- **Pre-built APK**: Download the ready-to-install APK from the root folder: `app-release.apk`
+
+### Build from Source
+
+#### Android APK
 
 ```bash
 flutter build apk --release
 ```
 
-### Android App Bundle
+#### Android App Bundle
 
 ```bash
 flutter build appbundle --release
 ```
 
-### iOS
+#### iOS
 
 ```bash
 flutter build ios --release
 ```
 
-### Web
+#### Web
 
 ```bash
 flutter build web --release
 ```
+
+### Live Demo
+
+- **Web Version**: [View Live App](https://shubham-gupta0.github.io/Pet_adoption_app/) 🌐
 
 ## 🧪 Testing
 
