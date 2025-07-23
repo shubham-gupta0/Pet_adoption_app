@@ -40,40 +40,46 @@ A beautiful and modern Flutter application that helps users find and adopt their
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/pet_adoption_app.git
    cd pet_adoption_app
    ```
 
 2. **Install dependencies**
+
    ```bash
    flutter pub get
    ```
 
 3. **Set up API Keys**
+
    - Create an account at [The Cat API](https://thecatapi.com/) and [The Dog API](https://thedogapi.com/)
    - Create a file `lib/core/api/api_keys.dart` with your API keys:
+
    ```dart
    const String theCatApiKey = 'your_cat_api_key_here';
    const String theDogApiKey = 'your_dog_api_key_here';
    ```
 
 4. **Generate code**
+
    ```bash
    flutter packages pub run build_runner build
    ```
 
 5. **Run the app**
+
    ```bash
    # For development
    flutter run
-   
+
    # For Android
    flutter run -d android
-   
+
    # For iOS
    flutter run -d ios
-   
+
    # For Web
    flutter run -d chrome
    ```
@@ -107,21 +113,25 @@ lib/
 ## 🔧 Build & Deploy
 
 ### Android APK
+
 ```bash
 flutter build apk --release
 ```
 
 ### Android App Bundle
+
 ```bash
 flutter build appbundle --release
 ```
 
 ### iOS
+
 ```bash
 flutter build ios --release
 ```
 
 ### Web
+
 ```bash
 flutter build web --release
 ```
@@ -142,6 +152,7 @@ flutter drive --target=test_driver/app.dart
 ## 📦 Dependencies
 
 ### Main Dependencies
+
 - `flutter_bloc` - State management
 - `dio` - HTTP client
 - `cached_network_image` - Image caching
@@ -151,22 +162,11 @@ flutter drive --target=test_driver/app.dart
 - `equatable` - Value equality
 
 ### Dev Dependencies
+
 - `flutter_test` - Testing framework
 - `build_runner` - Code generation
 - `json_annotation` - JSON serialization
 - `mocktail` - Mocking for tests
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -175,11 +175,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Flutter team for the amazing framework
 - All contributors who help improve this project
 
-## 📞 Support
-
-If you have any questions or issues, please open an issue on GitHub or contact [your-email@example.com](mailto:your-email@example.com).
-
 ---
 
 Made with ❤️ and Flutter
+
 # Pet_adoption_app
