@@ -1,10 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pet_adoption_app/domain/entities/pet.dart';
+import 'package:pet_adoption_app/presentation/favorites/bloc/favorites_bloc.dart';
 import 'package:pet_adoption_app/presentation/home/view/widgets/pet_card.dart';
+
+class MockFavoritesBloc extends Mock implements FavoritesBloc {}
 
 void main() {
   group('PetCard Widget Tests', () {
+    late MockFavoritesBloc mockFavoritesBloc;
+
+    setUp(() {
+      mockFavoritesBloc = MockFavoritesBloc();
+
+      // Set up GetIt for testing
+      final getIt = GetIt.instance;
+      if (getIt.isRegistered<FavoritesBloc>()) {
+        getIt.unregister<FavoritesBloc>();
+      }
+      getIt.registerSingleton<FavoritesBloc>(mockFavoritesBloc);
+
+      // Mock the isFavorite method to return false by default
+      when(() => mockFavoritesBloc.isFavorite(any()))
+          .thenAnswer((_) async => false);
+    });
+
+    tearDown(() {
+      final getIt = GetIt.instance;
+      if (getIt.isRegistered<FavoritesBloc>()) {
+        getIt.unregister<FavoritesBloc>();
+      }
+    });
     const testPet = Pet(
       id: '1',
       name: 'Buddy',
@@ -16,7 +44,7 @@ void main() {
       description: 'A friendly dog',
       images: ['https://example.com/buddy.jpg'],
       location: 'New York',
-      price: 250.0,
+      cost: 250.0,
       isAdopted: false,
     );
 
@@ -31,7 +59,7 @@ void main() {
       description: 'A playful dog',
       images: ['https://example.com/lucy.jpg'],
       location: 'California',
-      price: 200.0,
+      cost: 200.0,
       isAdopted: true,
     );
 
@@ -45,8 +73,10 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100)); // Initial delay
+      await tester.pump(
+          const Duration(milliseconds: 400)); // Animation duration + buffer
 
       // Assert
       expect(find.text('Buddy'), findsOneWidget);
@@ -65,8 +95,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       expect(find.text('Adopted'), findsOneWidget);
@@ -83,8 +114,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       expect(find.text('Adopted'), findsNothing);
@@ -100,8 +132,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
@@ -117,8 +150,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       final opacityWidget = tester.widget<Opacity>(
@@ -142,8 +176,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       final opacityWidget = tester.widget<Opacity>(
@@ -167,8 +202,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       final heroWidget = tester.widget<Hero>(
@@ -193,7 +229,7 @@ void main() {
         description: 'A friendly dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
@@ -206,8 +242,9 @@ void main() {
         ),
       );
 
-      // Allow animations to complete
-      await tester.pumpAndSettle();
+      // Wait for animations to start and complete
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Assert
       final textWidget = tester.widget<Text>(

@@ -154,7 +154,7 @@ flutter build web --release
 
 ### Live Demo
 
-- **Web Version**: [View Live App](https://shubham-gupta0.github.io/Pet_adoption_app/) 🌐
+- **Web Version**: [View Live App](https://petadoption92472.netlify.app/#/home) 🌐
 
 ## 🧪 Testing
 
@@ -165,8 +165,6 @@ flutter test
 # Run tests with coverage
 flutter test --coverage
 
-# Run integration tests
-flutter drive --target=test_driver/app.dart
 ```
 
 ## 📦 Dependencies

@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pet_adoption_app/data/datasources/favorites_local_datasource.dart';
+import 'package:pet_adoption_app/data/datasources/pet_cache_datasource.dart';
 import 'package:pet_adoption_app/domain/entities/pet.dart';
 import 'package:pet_adoption_app/domain/repositories/pet_repository.dart';
 import 'package:pet_adoption_app/presentation/favorites/bloc/favorites_bloc.dart';
@@ -11,16 +12,56 @@ class MockFavoritesLocalDataSource extends Mock
 
 class MockPetRepository extends Mock implements PetRepository {}
 
+class MockPetCacheDataSource extends Mock implements PetCacheDataSource {}
+
+class FakePet extends Fake implements Pet {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakePet());
+  });
+
   group('FavoritesBloc', () {
     late FavoritesBloc favoritesBloc;
     late MockFavoritesLocalDataSource mockLocalDataSource;
     late MockPetRepository mockRepository;
+    late MockPetCacheDataSource mockCacheDataSource;
+
+    final testPets = [
+      const Pet(
+        id: '1',
+        name: 'Buddy',
+        breed: 'Golden Retriever',
+        age: 3,
+        gender: 'Male',
+        size: 'Large',
+        color: 'Golden',
+        description: 'A friendly dog',
+        images: ['https://example.com/buddy.jpg'],
+        location: 'New York',
+        cost: 250.0,
+      ),
+      const Pet(
+        id: '2',
+        name: 'Lucy',
+        breed: 'Labrador',
+        age: 2,
+        gender: 'Female',
+        size: 'Medium',
+        color: 'Black',
+        description: 'A playful dog',
+        images: ['https://example.com/lucy.jpg'],
+        location: 'California',
+        cost: 200.0,
+      ),
+    ];
 
     setUp(() {
       mockLocalDataSource = MockFavoritesLocalDataSource();
       mockRepository = MockPetRepository();
-      favoritesBloc = FavoritesBloc(mockLocalDataSource, mockRepository);
+      mockCacheDataSource = MockPetCacheDataSource();
+      favoritesBloc = FavoritesBloc(
+          mockLocalDataSource, mockRepository, mockCacheDataSource);
     });
 
     tearDown(() {
@@ -32,42 +73,23 @@ void main() {
     });
 
     group('LoadFavorites', () {
-      final testPets = [
-        const Pet(
-          id: '1',
-          name: 'Buddy',
-          breed: 'Golden Retriever',
-          age: 3,
-          gender: 'Male',
-          size: 'Large',
-          color: 'Golden',
-          description: 'A friendly dog',
-          images: ['https://example.com/buddy.jpg'],
-          location: 'New York',
-          price: 250.0,
-        ),
-        const Pet(
-          id: '2',
-          name: 'Lucy',
-          breed: 'Labrador',
-          age: 2,
-          gender: 'Female',
-          size: 'Medium',
-          color: 'Black',
-          description: 'A playful dog',
-          images: ['https://example.com/lucy.jpg'],
-          location: 'California',
-          price: 200.0,
-        ),
-      ];
-
       blocTest<FavoritesBloc, FavoritesState>(
         'emits [FavoritesLoading, FavoritesLoaded] when LoadFavorites is added successfully',
         build: () {
           when(() => mockLocalDataSource.getFavoriteIds())
               .thenAnswer((_) async => ['1', '2']);
-          when(() => mockRepository.getPets(limit: 100, page: 1))
+          when(() => mockCacheDataSource.getCachedPet('1'))
+              .thenAnswer((_) async => null);
+          when(() => mockCacheDataSource.getCachedPet('2'))
+              .thenAnswer((_) async => null);
+          when(() => mockLocalDataSource.getFavoritePets())
+              .thenAnswer((_) async => []);
+          when(() => mockRepository.getPets(limit: 100, page: 0))
               .thenAnswer((_) async => testPets);
+          when(() => mockCacheDataSource.cachePet(any()))
+              .thenAnswer((_) async {});
+          when(() => mockLocalDataSource.cacheFavoritePet(any()))
+              .thenAnswer((_) async {});
           return favoritesBloc;
         },
         act: (bloc) => bloc.add(LoadFavorites()),
@@ -81,7 +103,7 @@ void main() {
         ],
         verify: (_) {
           verify(() => mockLocalDataSource.getFavoriteIds()).called(1);
-          verify(() => mockRepository.getPets(limit: 100, page: 1)).called(1);
+          verify(() => mockRepository.getPets(limit: 100, page: 0)).called(1);
         },
       );
 
@@ -90,8 +112,6 @@ void main() {
         build: () {
           when(() => mockLocalDataSource.getFavoriteIds())
               .thenAnswer((_) async => []);
-          when(() => mockRepository.getPets(limit: 100, page: 1))
-              .thenAnswer((_) async => testPets);
           return favoritesBloc;
         },
         act: (bloc) => bloc.add(LoadFavorites()),
@@ -126,12 +146,18 @@ void main() {
         build: () {
           when(() => mockLocalDataSource.isFavorite('1'))
               .thenAnswer((_) async => false);
-          when(() => mockLocalDataSource.addToFavorites('1'))
+          when(() => mockCacheDataSource.getCachedPet('1'))
+              .thenAnswer((_) async => null);
+          when(() => mockRepository.getPetById('1'))
+              .thenAnswer((_) async => testPets.first);
+          when(() => mockCacheDataSource.cachePet(any()))
               .thenAnswer((_) async {});
+          when(() => mockLocalDataSource.addToFavorites('1',
+              petData: any(named: 'petData'))).thenAnswer((_) async {});
           when(() => mockLocalDataSource.getFavoriteIds())
               .thenAnswer((_) async => ['1']);
-          when(() => mockRepository.getPets(limit: 100, page: 1))
-              .thenAnswer((_) async => []);
+          when(() => mockCacheDataSource.getCachedPet('1'))
+              .thenAnswer((_) async => testPets.first);
           return favoritesBloc;
         },
         act: (bloc) => bloc.add(ToggleFavorite('1')),
@@ -141,7 +167,8 @@ void main() {
         ],
         verify: (_) {
           verify(() => mockLocalDataSource.isFavorite('1')).called(1);
-          verify(() => mockLocalDataSource.addToFavorites('1')).called(1);
+          verify(() => mockLocalDataSource.addToFavorites('1',
+              petData: any(named: 'petData'))).called(1);
         },
       );
     });

@@ -16,7 +16,7 @@ void main() {
         description: 'A friendly and energetic dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
@@ -31,7 +31,7 @@ void main() {
       expect(pet.description, 'A friendly and energetic dog');
       expect(pet.images, ['https://example.com/buddy.jpg']);
       expect(pet.location, 'New York');
-      expect(pet.price, 250.0);
+      expect(pet.cost, 250.0);
       expect(pet.isAdopted, false);
     });
 
@@ -48,7 +48,7 @@ void main() {
         description: 'A friendly and energetic dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
@@ -66,7 +66,7 @@ void main() {
       expect(json['description'], 'A friendly and energetic dog');
       expect(json['images'], ['https://example.com/buddy.jpg']);
       expect(json['location'], 'New York');
-      expect(json['price'], 250.0);
+      expect(json['cost'], 250.0);
       expect(json['isAdopted'], false);
     });
 
@@ -83,7 +83,7 @@ void main() {
         'description': 'A friendly and energetic dog',
         'images': ['https://example.com/buddy.jpg'],
         'location': 'New York',
-        'price': 250.0,
+        'cost': 250.0,
         'isAdopted': false,
       };
 
@@ -101,7 +101,7 @@ void main() {
       expect(pet.description, 'A friendly and energetic dog');
       expect(pet.images, ['https://example.com/buddy.jpg']);
       expect(pet.location, 'New York');
-      expect(pet.price, 250.0);
+      expect(pet.cost, 250.0);
       expect(pet.isAdopted, false);
     });
 
@@ -118,21 +118,21 @@ void main() {
         description: 'A friendly and energetic dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
       // Act
       final adoptedPet = originalPet.copyWith(
         isAdopted: true,
-        price: 0.0,
+        cost: 0.0,
       );
 
       // Assert
       expect(adoptedPet.id, originalPet.id);
       expect(adoptedPet.name, originalPet.name);
       expect(adoptedPet.isAdopted, true);
-      expect(adoptedPet.price, 0.0);
+      expect(adoptedPet.cost, 0.0);
     });
 
     test('should maintain equality based on properties', () {
@@ -148,7 +148,7 @@ void main() {
         description: 'A friendly and energetic dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
@@ -163,7 +163,7 @@ void main() {
         description: 'A friendly and energetic dog',
         images: ['https://example.com/buddy.jpg'],
         location: 'New York',
-        price: 250.0,
+        cost: 250.0,
         isAdopted: false,
       );
 
