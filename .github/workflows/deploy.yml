@@ -3,21 +3,28 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.16.0'
+        flutter-version: 'stable'
         channel: 'stable'
+        cache: true
+        cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+    
+    - name: Verify Flutter version
+      run: |
+        flutter --version
+        dart --version
     
     - name: Install dependencies
       run: flutter pub get
@@ -25,17 +32,19 @@ jobs:
     - name: Create API keys file
       run: |
         mkdir -p lib/core/api
-        echo "const String theCatApiKey = 'demo_key';" > lib/core/api/api_keys.dart
-        echo "const String theDogApiKey = 'demo_key';" >> lib/core/api/api_keys.dart
+        cat > lib/core/api/api_keys.dart << 'EOF'
+        class ApiKeys {
+          // Demo API key for public deployment
+          static const String catApiKey = 'live_demo_key_replace_with_your_own';
+          static const String dogApiKey = 'live_demo_key_replace_with_your_own';
+        }
+        EOF
     
-    - name: Generate code
-      run: flutter packages pub run build_runner build --delete-conflicting-outputs
-    
-    - name: Build web
+    - name: Build web (without code generation)
       run: flutter build web --release --web-renderer html --base-href "/Pet_adoption_app/"
     
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
