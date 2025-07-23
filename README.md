@@ -24,9 +24,6 @@ A beautiful and modern Flutter application that helps users find and adopt their
 - **Dependency Injection**: GetIt with Injectable
 - **API Integration**: The Cat API & The Dog API
 
-## 📱 Screenshots
-
-> Add your app screenshots here
 
 ## � Download APK
 
