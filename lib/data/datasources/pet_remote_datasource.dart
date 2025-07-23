@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pet_adoption_app/core/api/api_keys.dart';
 import 'package:pet_adoption_app/domain/entities/pet.dart';
-
+const String _theCatApiKey = 'live_kGLijz3K86l8G3WQBZDg81bxjDXvTDEi2lgIc17IEgoO8fhn7NZvIpPQ952aOwMt';
+const String _theDogApiKey = 'live_nmyod3Cl5gGuq6DOQWjZJ3lPCUPhtc8UmV6Xfhz7J0ZUxxHx8ARGluwCTS0WnGin';
 abstract class PetRemoteDataSource {
   Future<List<Pet>> getPets({int page = 0, int limit = 20});
   Future<Pet?> getPetById(String id);
@@ -64,7 +65,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   Future<Map<String, dynamic>> _fetchRandomBreed({required bool isDog}) async {
     final domain = isDog ? 'thedogapi' : 'thecatapi';
-    final apiKey = isDog ? theDogApiKey : theCatApiKey;
+    final apiKey = isDog ? _theDogApiKey : _theCatApiKey;
     final url = 'https://api.$domain.com/v1/breeds';
 
     try {
@@ -129,7 +130,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
   Future<List<String>> _fetchPetImages(
       {required bool isDog, dynamic breedId, int count = 3}) async {
     final domain = isDog ? 'thedogapi' : 'thecatapi';
-    final apiKey = isDog ? theDogApiKey : theCatApiKey;
+    final apiKey = isDog ? _theDogApiKey : _theCatApiKey;
 
     // Try to get breed-specific images first
     String url = 'https://api.$domain.com/v1/images/search?limit=$count';
