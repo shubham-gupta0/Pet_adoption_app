@@ -31,7 +31,6 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
 
 # Symbolication related
 app.*.symbols
@@ -43,6 +42,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Build artifacts (except web build for deployment)
+build/*
+!build/web/
+!build/web/**
 
 # API Keys and sensitive data
 lib/core/api/api_keys.dart
